@@ -42,7 +42,23 @@ namespace ApiDotNet.Controllers
             _context.Usuarios.Remove(usuario);
             _context.SaveChanges();
 
-            return NoContent(); 
+            return NoContent();        
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Usuario usuarioAtualizado)
+        {
+            var usuario = _context.Usuarios.Find(id);
+
+            if (usuario == null)
+                return NotFound("Usuário não encontrado");
+
+            usuario.Nome = usuarioAtualizado.Nome;
+            usuario.Email = usuarioAtualizado.Email;
+
+            _context.SaveChanges();
+
+            return Ok(usuario);
         }
     }
 }
