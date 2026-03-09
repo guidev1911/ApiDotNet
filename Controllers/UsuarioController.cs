@@ -1,5 +1,5 @@
-﻿using ApiDotNet.Data;
-using ApiDotNet.Models;
+﻿using ApiDotNet.Models;
+using ApiDotNet.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiDotNet.Controllers
@@ -8,57 +8,63 @@ namespace ApiDotNet.Controllers
     [Route("api/[controller]")]
     public class UsuariosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly UsuarioService _service;
 
-        public UsuariosController(AppDbContext context)
+        public UsuariosController(UsuarioService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var usuarios = _context.Usuarios.ToList();
+            var usuarios = _service.Listar();
             return Ok(usuarios);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var usuario = _service.BuscarPorId(id);
+
+            if (usuario == null)
+                return NotFound("Usuário não encontrado");
+
+            return Ok(usuario);
         }
 
         [HttpPost]
         public IActionResult Post(Usuario usuario)
         {
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            var novoUsuario = _service.Criar(usuario);
 
-            return Created("", usuario);
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var usuario = _context.Usuarios.Find(id);
-
-            if (usuario == null)
-                return NotFound("Usuário não encontrado");
-
-            _context.Usuarios.Remove(usuario);
-            _context.SaveChanges();
-
-            return NoContent();        
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = novoUsuario.Id },
+                novoUsuario
+            );
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Usuario usuarioAtualizado)
         {
-            var usuario = _context.Usuarios.Find(id);
+            var usuario = _service.Atualizar(id, usuarioAtualizado);
 
             if (usuario == null)
                 return NotFound("Usuário não encontrado");
 
-            usuario.Nome = usuarioAtualizado.Nome;
-            usuario.Email = usuarioAtualizado.Email;
-
-            _context.SaveChanges();
-
             return Ok(usuario);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var deletado = _service.Deletar(id);
+
+            if (!deletado)
+                return NotFound("Usuário não encontrado");
+
+            return NoContent();
         }
     }
 }

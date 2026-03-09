@@ -1,5 +1,6 @@
 ﻿using ApiDotNet.Data;
 using ApiDotNet.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiDotNet.Services
 {
@@ -12,30 +13,42 @@ namespace ApiDotNet.Services
             _context = context;
         }
 
-        public List<Usuario> Listar()
+        public async Task<List<Usuario>> Listar()
         {
-            return _context.Usuarios.ToList();
+            return await _context.Usuarios.ToListAsync();
         }
 
-        public Usuario? BuscarPorId(int id)
+        public async Task<Usuario?> BuscarPorId(int id)
         {
-            return _context.Usuarios.Find(id);
+            return await _context.Usuarios.FindAsync(id);
         }
 
-        public Usuario Criar(Usuario usuario)
+        public async Task<Usuario> Criar(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return usuario;
         }
 
-        public bool Deletar(int id)
+        public async Task<Usuario?> Atualizar(int id, Usuario usuarioAtualizado)
         {
-            var usuario = _context.Usuarios.Find(id);
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null) return null;
+
+            usuario.Nome = usuarioAtualizado.Nome;
+            usuario.Email = usuarioAtualizado.Email;
+
+            await _context.SaveChangesAsync();
+            return usuario;
+        }
+
+        public async Task<bool> Deletar(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null) return false;
 
             _context.Usuarios.Remove(usuario);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
     }
