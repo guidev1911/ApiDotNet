@@ -16,16 +16,16 @@ namespace ApiDotNet.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var usuarios = _service.Listar();
+            var usuarios = await _service.Listar();
             return Ok(usuarios);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var usuario = _service.BuscarPorId(id);
+            var usuario = await _service.BuscarPorId(id);
 
             if (usuario == null)
                 return NotFound("Usuário não encontrado");
@@ -34,9 +34,9 @@ namespace ApiDotNet.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Usuario usuario)
+        public async Task<IActionResult> Post(Usuario usuario)
         {
-            var novoUsuario = _service.Criar(usuario);
+            var novoUsuario = await _service.Criar(usuario);
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -46,9 +46,9 @@ namespace ApiDotNet.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Usuario usuarioAtualizado)
+        public async Task<IActionResult> Put(int id, Usuario usuarioAtualizado)
         {
-            var usuario = _service.Atualizar(id, usuarioAtualizado);
+            var usuario = await _service.Atualizar(id, usuarioAtualizado);
 
             if (usuario == null)
                 return NotFound("Usuário não encontrado");
@@ -57,9 +57,9 @@ namespace ApiDotNet.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var deletado = _service.Deletar(id);
+            var deletado = await _service.Deletar(id);
 
             if (!deletado)
                 return NotFound("Usuário não encontrado");
