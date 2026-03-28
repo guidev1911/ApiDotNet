@@ -1,6 +1,8 @@
 ﻿using ApiDotNet.Models;
 using ApiDotNet.Services;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using ApiDotNet.DTOs;
 
 namespace ApiDotNet.Controllers
 {
@@ -9,17 +11,22 @@ namespace ApiDotNet.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly UsuarioService _service;
+        private readonly IMapper _mapper;
 
-        public UsuariosController(UsuarioService service)
+        public UsuariosController(UsuarioService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             var usuarios = await _service.Listar();
-            return Ok(usuarios);
+
+            var usuariosDto = _mapper.Map<List<UsuarioResponseDTO>>(usuarios);
+
+            return Ok(usuariosDto);
         }
 
         [HttpGet("{id}")]
@@ -30,30 +37,40 @@ namespace ApiDotNet.Controllers
             if (usuario == null)
                 return NotFound("Usuário não encontrado");
 
-            return Ok(usuario);
+            var dto = _mapper.Map<UsuarioResponseDTO>(usuario);
+
+            return Ok(dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Usuario usuario)
+        public async Task<IActionResult> Post(UsuarioCreateDTO dto)
         {
+            var usuario = _mapper.Map<Usuario>(dto);
+
             var novoUsuario = await _service.Criar(usuario);
+
+            var response = _mapper.Map<UsuarioResponseDTO>(novoUsuario);
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { id = novoUsuario.Id },
-                novoUsuario
+                new { id = response.Id },
+                response
             );
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Usuario usuarioAtualizado)
+        public async Task<IActionResult> Put(int id, UsuarioUpdateDTO dto)
         {
-            var usuario = await _service.Atualizar(id, usuarioAtualizado);
+            var usuario = _mapper.Map<Usuario>(dto);
 
-            if (usuario == null)
+            var atualizado = await _service.Atualizar(id, usuario);
+
+            if (atualizado == null)
                 return NotFound("Usuário não encontrado");
 
-            return Ok(usuario);
+            var response = _mapper.Map<UsuarioResponseDTO>(atualizado);
+
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
