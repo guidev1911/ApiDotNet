@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiDotNet.DTOs;
 using ApiDotNet.Services;
-using ApiDotNet.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiDotNet.Controllers
 {

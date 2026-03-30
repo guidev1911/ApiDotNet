@@ -1,11 +1,13 @@
-﻿using ApiDotNet.Models;
+﻿using ApiDotNet.DTOs;
+using ApiDotNet.Models;
 using ApiDotNet.Services;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using ApiDotNet.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiDotNet.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsuariosController : ControllerBase
