@@ -53,6 +53,8 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         ValidateIssuer = false,
         ValidateAudience = false
+
+        RoleClaimType = ClaimTypes.Role
     };
 });
 

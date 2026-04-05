@@ -25,6 +25,8 @@ namespace ApiDotNet.Services
 
         public async Task<Usuario> Criar(Usuario usuario)
         {
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
             return usuario;

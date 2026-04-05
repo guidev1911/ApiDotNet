@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ApiDotNet.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace ApiDotNet.Services
 {
@@ -30,7 +29,8 @@ namespace ApiDotNet.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, usuario.Email),
-                    new Claim("UserId", usuario.Id.ToString())
+                    new Claim("UserId", usuario.Id.ToString()),
+                    new Claim(ClaimTypes.Role, usuario.Role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(
                     Convert.ToDouble(_configuration["Jwt:ExpireHours"])

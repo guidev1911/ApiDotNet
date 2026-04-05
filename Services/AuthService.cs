@@ -15,8 +15,19 @@ namespace ApiDotNet.Services
 
         public async Task<Usuario?> ValidarUsuario(string email, string senha)
         {
-            return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (usuario == null)
+                return null;
+
+            bool senhaValida = BCrypt.Net.BCrypt.Verify(senha, usuario.Senha);
+
+            if (!senhaValida)
+                return null;
+
+            return usuario;
         }
+    }
     }
 }

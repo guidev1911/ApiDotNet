@@ -22,6 +22,7 @@ namespace ApiDotNet.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             var usuarios = await _service.Listar();
