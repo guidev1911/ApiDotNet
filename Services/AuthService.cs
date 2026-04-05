@@ -29,5 +29,4 @@ namespace ApiDotNet.Services
             return usuario;
         }
     }
-    }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ApiDotNet.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,7 +53,7 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
 
         RoleClaimType = ClaimTypes.Role
     };
