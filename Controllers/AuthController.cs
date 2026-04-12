@@ -1,6 +1,6 @@
 ﻿using ApiDotNet.DTOs;
 using ApiDotNet.Services;
-using Microsoft.AspNetCore.Authorization;
+using ApiDotNet.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiDotNet.Controllers
@@ -11,11 +11,17 @@ namespace ApiDotNet.Controllers
     {
         private readonly AuthService _authService;
         private readonly TokenService _tokenService;
+        private readonly AppDbContext _context;
 
-        public AuthController(AuthService authService, TokenService tokenService)
+        public AuthController(
+            AuthService authService,
+            TokenService tokenService,
+            AppDbContext context
+        )
         {
             _authService = authService;
             _tokenService = tokenService;
+            _context = context;
         }
 
         [HttpPost("login")]
@@ -26,11 +32,19 @@ namespace ApiDotNet.Controllers
             if (usuario == null)
                 return Unauthorized("Email ou senha inválidos");
 
-            var token = _tokenService.GerarToken(usuario);
+            var accessToken = _tokenService.GerarToken(usuario);
+
+            var refreshToken = _tokenService.GerarRefreshToken();
+
+            usuario.RefreshToken = refreshToken;
+            usuario.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            await _context.SaveChangesAsync();
 
             return Ok(new
             {
-                token = token
+                accessToken = accessToken,
+                refreshToken = refreshToken
             });
         }
     }
