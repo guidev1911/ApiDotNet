@@ -2,6 +2,7 @@
 using ApiDotNet.Services;
 using ApiDotNet.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiDotNet.Controllers
 {
@@ -45,6 +46,30 @@ namespace ApiDotNet.Controllers
             {
                 accessToken = accessToken,
                 refreshToken = refreshToken
+            });
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(TokenDTO dto)
+        {
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
+
+            if (usuario == null || usuario.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                return Unauthorized("Refresh token inválido");
+
+            var newAccessToken = _tokenService.GerarToken(usuario);
+            var newRefreshToken = _tokenService.GerarRefreshToken();
+
+            usuario.RefreshToken = newRefreshToken;
+            usuario.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                accessToken = newAccessToken,
+                refreshToken = newRefreshToken
             });
         }
     }
