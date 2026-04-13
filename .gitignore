@@ -1,11 +1,27 @@
-# Visual Studio
-.vs/
+# Build
 bin/
 obj/
 
-# User-specific files
+# User-specific
 *.user
 *.suo
 
 # Logs
 *.log
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# Config sensível
+appsettings.Development.json
+appsettings.Local.json
+
+# Secrets
+secrets.json
+
+# OS
+.DS_Store
+Thumbs.db
