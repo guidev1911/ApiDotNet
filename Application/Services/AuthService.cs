@@ -1,22 +1,20 @@
-﻿using ApiDotNet.Data;
+﻿using ApiDotNet.Application.Interfaces;
 using ApiDotNet.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
-namespace ApiDotNet.Services
+namespace ApiDotNet.Application.Services
 {
     public class AuthService
     {
-        private readonly AppDbContext _context;
+        private readonly IUsuarioRepository _repo;
 
-        public AuthService(AppDbContext context)
+        public AuthService(IUsuarioRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         public async Task<Usuario?> ValidarUsuario(string email, string senha)
         {
-            var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == email);
+            var usuario = await _repo.BuscarPorEmail(email);
 
             if (usuario == null)
                 return null;
