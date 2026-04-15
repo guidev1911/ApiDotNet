@@ -1,57 +1,33 @@
-﻿using ApiDotNet.Data;
+﻿using ApiDotNet.Application.Interfaces;
 using ApiDotNet.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
-namespace ApiDotNet.Services
+namespace ApiDotNet.Application.Services
 {
     public class UsuarioService
     {
-        private readonly AppDbContext _context;
+        private readonly IUsuarioRepository _repo;
 
-        public UsuarioService(AppDbContext context)
+        public UsuarioService(IUsuarioRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         public async Task<List<Usuario>> Listar()
-        {
-            return await _context.Usuarios.ToListAsync();
-        }
+            => await _repo.Listar();
 
         public async Task<Usuario?> BuscarPorId(int id)
-        {
-            return await _context.Usuarios.FindAsync(id);
-        }
+            => await _repo.BuscarPorId(id);
 
         public async Task<Usuario> Criar(Usuario usuario)
         {
             usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-            return usuario;
+            return await _repo.Criar(usuario);
         }
 
-        public async Task<Usuario?> Atualizar(int id, Usuario usuarioAtualizado)
-        {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null) return null;
-
-            usuario.Nome = usuarioAtualizado.Nome;
-            usuario.Email = usuarioAtualizado.Email;
-
-            await _context.SaveChangesAsync();
-            return usuario;
-        }
+        public async Task<Usuario?> Atualizar(int id, Usuario usuario)
+            => await _repo.Atualizar(id, usuario);
 
         public async Task<bool> Deletar(int id)
-        {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null) return false;
-
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+            => await _repo.Deletar(id);
     }
 }
