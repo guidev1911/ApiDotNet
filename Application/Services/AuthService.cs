@@ -1,5 +1,5 @@
 ﻿using ApiDotNet.Data;
-using ApiDotNet.Models;
+using ApiDotNet.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiDotNet.Services

@@ -1,4 +1,4 @@
-﻿namespace ApiDotNet.Models
+﻿namespace ApiDotNet.Domain.Entities
 {
     public class Usuario
     {

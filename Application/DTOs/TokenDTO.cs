@@ -1,4 +1,4 @@
-﻿namespace ApiDotNet.DTOs;
+﻿namespace ApiDotNet.Application.DTOs;
 
 public class TokenDTO
 {

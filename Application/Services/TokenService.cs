@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using ApiDotNet.Models;
+using ApiDotNet.Domain.Entities;
 
 namespace ApiDotNet.Services
 {
