@@ -1,6 +1,6 @@
-﻿using ApiDotNet.DTOs;
-using ApiDotNet.Models;
-using ApiDotNet.Services;
+﻿using ApiDotNet.Application.DTOs;
+using ApiDotNet.Application.Services;
+using ApiDotNet.Domain.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

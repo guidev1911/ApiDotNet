@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ApiDotNet.Models;
-using ApiDotNet.DTOs;
+using ApiDotNet.Domain.Entities;
+using ApiDotNet.Application.DTOs;
 
 namespace ApiDotNet.Mappings
 {

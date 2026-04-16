@@ -26,5 +26,22 @@ namespace ApiDotNet.Application.Services
 
             return usuario;
         }
+
+        public async Task<Usuario?> AtualizarRefreshToken(Usuario usuario, string refreshToken)
+        {
+            usuario.RefreshToken = refreshToken;
+            usuario.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            await _repo.Salvar();
+
+            return usuario;
+        }
+
+        public async Task<Usuario?> BuscarPorRefreshToken(string refreshToken)
+        {
+            var usuarios = await _repo.Listar();
+
+            return usuarios.FirstOrDefault(u => u.RefreshToken == refreshToken);
+        }
     }
 }

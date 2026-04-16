@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ApiDotNet.Domain.Entities;
 
-namespace ApiDotNet.Services
+namespace ApiDotNet.Application.Services
 {
     public class TokenService
     {

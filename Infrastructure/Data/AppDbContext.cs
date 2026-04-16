@@ -1,7 +1,7 @@
-﻿using ApiDotNet.Models;
+﻿using ApiDotNet.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiDotNet.Data
+namespace ApiDotNet.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {

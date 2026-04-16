@@ -1,11 +1,13 @@
-using ApiDotNet.Data;
-using ApiDotNet.Services;
+using ApiDotNet.Infrastructure.Data;
+using ApiDotNet.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using ApiDotNet.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using ApiDotNet.Application.Interfaces;
+using ApiDotNet.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +24,6 @@ builder.Services.AddAutoMapper(cfg =>
 });
 
 builder.Services.AddControllers();
-
-builder.Services.AddScoped<UsuarioService>();
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<TokenService>();
-
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(
@@ -36,6 +33,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         )
     );
 });
+
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddAuthentication(options =>
 {

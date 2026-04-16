@@ -1,5 +1,5 @@
 using ApiDotNet.Application.Interfaces;
-using ApiDotNet.Data;
+using ApiDotNet.Infrastructure.Data;
 using ApiDotNet.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
