@@ -1,5 +1,6 @@
 ﻿using ApiDotNet.Application.Interfaces;
 using ApiDotNet.Domain.Entities;
+using ApiDotNet.Application.Exceptions;
 
 namespace ApiDotNet.Application.Services
 {
@@ -12,17 +13,17 @@ namespace ApiDotNet.Application.Services
             _repo = repo;
         }
 
-        public async Task<Usuario?> ValidarUsuario(string email, string senha)
+        public async Task<Usuario> ValidarUsuario(string email, string senha)
         {
             var usuario = await _repo.BuscarPorEmail(email);
 
             if (usuario == null)
-                return null;
+                throw new UnauthorizedException("Credenciais inválidas");
 
             bool senhaValida = BCrypt.Net.BCrypt.Verify(senha, usuario.Senha);
 
             if (!senhaValida)
-                return null;
+                throw new UnauthorizedException("Credenciais inválidas");
 
             return usuario;
         }

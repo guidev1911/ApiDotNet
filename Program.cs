@@ -1,4 +1,4 @@
-using ApiDotNet.Middleware;
+using ApiDotNet.Infrastructure.Middleware;
 using ApiDotNet.Infrastructure.Data;
 using ApiDotNet.Application.Services;
 using Microsoft.EntityFrameworkCore;
