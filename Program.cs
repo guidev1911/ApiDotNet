@@ -1,3 +1,4 @@
+using ApiDotNet.Middleware;
 using ApiDotNet.Infrastructure.Data;
 using ApiDotNet.Application.Services;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
