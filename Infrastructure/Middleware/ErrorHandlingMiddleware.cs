@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using ApiDotNet.Application.Exceptions;
 
 namespace ApiDotNet.Infrastructure.Middleware
 {
@@ -28,14 +29,25 @@ namespace ApiDotNet.Infrastructure.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            var response = new
+            int statusCode = ex switch
             {
-                status = (int)HttpStatusCode.InternalServerError,
-                mensagem = "Erro interno no servidor",
-                detalhe = ex.Message
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+                _ => StatusCodes.Status500InternalServerError
             };
 
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            string mensagem = ex switch
+            {
+                UnauthorizedException => ex.Message,
+                _ => "Erro interno no servidor"
+            };
+
+            context.Response.StatusCode = statusCode;
+
+            var response = new
+            {
+                status = statusCode,
+                mensagem = mensagem
+            };
 
             var json = JsonSerializer.Serialize(response);
 
