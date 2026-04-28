@@ -1,4 +1,5 @@
 ﻿using ApiDotNet.Application.Interfaces;
+using ApiDotNet.Application.Exceptions;
 using ApiDotNet.Domain.Entities;
 
 namespace ApiDotNet.Application.Services
@@ -15,8 +16,15 @@ namespace ApiDotNet.Application.Services
         public async Task<List<Usuario>> Listar()
             => await _repo.Listar();
 
-        public async Task<Usuario?> BuscarPorId(int id)
-            => await _repo.BuscarPorId(id);
+        public async Task<Usuario> BuscarPorId(int id)
+        {
+            var usuario = await _repo.BuscarPorId(id);
+
+            if (usuario == null)
+                throw new NotFoundException("Usuário não encontrado");
+
+            return usuario;
+        }
 
         public async Task<Usuario> Criar(Usuario usuario)
         {
@@ -24,10 +32,24 @@ namespace ApiDotNet.Application.Services
             return await _repo.Criar(usuario);
         }
 
-        public async Task<Usuario?> Atualizar(int id, Usuario usuario)
-            => await _repo.Atualizar(id, usuario);
+        public async Task<Usuario> Atualizar(int id, Usuario usuario)
+        {
+            var usuarioAtualizado = await _repo.Atualizar(id, usuario);
+
+            if (usuarioAtualizado == null)
+                throw new NotFoundException("Usuário não encontrado");
+
+            return usuarioAtualizado;
+        }
 
         public async Task<bool> Deletar(int id)
-            => await _repo.Deletar(id);
+        {
+            var deletado = await _repo.Deletar(id);
+
+            if (!deletado)
+                throw new NotFoundException("Usuário não encontrado");
+
+            return true;
+        }
     }
 }
