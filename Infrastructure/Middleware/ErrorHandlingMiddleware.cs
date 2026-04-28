@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text.Json;
 using ApiDotNet.Application.Exceptions;
 
@@ -32,12 +31,14 @@ namespace ApiDotNet.Infrastructure.Middleware
             int statusCode = ex switch
             {
                 UnauthorizedException => StatusCodes.Status401Unauthorized,
+                NotFoundException => StatusCodes.Status404NotFound,
                 _ => StatusCodes.Status500InternalServerError
             };
 
             string mensagem = ex switch
             {
                 UnauthorizedException => ex.Message,
+                NotFoundException => ex.Message,
                 _ => "Erro interno no servidor"
             };
 

@@ -37,9 +37,6 @@ namespace ApiDotNet.Controllers
         {
             var usuario = await _service.BuscarPorId(id);
 
-            if (usuario == null)
-                return NotFound("Usuário não encontrado");
-
             var dto = _mapper.Map<UsuarioResponseDTO>(usuario);
 
             return Ok(dto);
@@ -68,9 +65,6 @@ namespace ApiDotNet.Controllers
 
             var atualizado = await _service.Atualizar(id, usuario);
 
-            if (atualizado == null)
-                return NotFound("Usuário não encontrado");
-
             var response = _mapper.Map<UsuarioResponseDTO>(atualizado);
 
             return Ok(response);
@@ -79,10 +73,7 @@ namespace ApiDotNet.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deletado = await _service.Deletar(id);
-
-            if (!deletado)
-                return NotFound("Usuário não encontrado");
+            await _service.Deletar(id);
 
             return NoContent();
         }
