@@ -25,9 +25,6 @@ namespace ApiDotNet.Controllers
         {
             var usuario = await _authService.ValidarUsuario(dto.Email, dto.Senha);
 
-            if (usuario == null)
-                return Unauthorized("Email ou senha inválidos");
-
             var accessToken = _tokenService.GerarToken(usuario);
             var refreshToken = _tokenService.GerarRefreshToken();
 
